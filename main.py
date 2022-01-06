@@ -10,17 +10,17 @@ import utils
 import argparse
 
 parser = argparse.ArgumentParser(description='vaes for single cell')
-parser.add_argument('--dir_name', type=str, default='./', help='Path to directory where data is stored')
+parser.add_argument('--dir_name', type=str, default='./input/', help='Path to directory where data is stored')
 parser.add_argument('--dataset_name', type=str, default='brain', help='Name of dataset')
 parser.add_argument('--n_models', type=int, default=2, help='Number of models to be trained')
 parser.add_argument('--train_iters', type=int, default=10, help='Number of training iterations')
 parser.add_argument('--use_pca', type=str, default='true', help='Whether to use pca')
 parser.add_argument('--n_pca', type=int, default=20, help='No. of pca components')
-def main():
 
+def main():
+    
     global args
     args = parser.parse_args()
-    print(args.accumulate(args.integers))
     dir_name=args.dir_name
     dataset_name = args.dataset_name
     n_models = args.n_models
@@ -28,9 +28,16 @@ def main():
     n_latent=10
     use_pca = args.use_pca
     n_pca = args.n_pca
+    results_file = 'write/dat.h5ad'
+
+    
+    
     adata=prep.preprocess(dir_name)
+        
     adata,latents=models.train(adata, n_models,train_iters)
+    
     adata.obsm["X_aggr"] = np.concatenate((latents), axis=1)
+    
 
 
     sc.pp.neighbors(adata, use_rep="X_aggr")
@@ -70,7 +77,7 @@ def main():
     ranked_genes_df = pd.DataFrame(data=dat, columns=clusters)
     ranked_genes_df['scores'] = dat_score
 
-    cell_type_df = pd.read_csv("data/markers.tsv", sep="\t")
+    cell_type_df = pd.read_csv("./data/markers.tsv", sep="\t")
     cell_type_df_ = cell_type_df[["official gene symbol", "cell type","organ"]].fillna('')
 
     gene2celltype = {}
@@ -81,6 +88,7 @@ def main():
         cluster_i['scores'] = [s[i] for s in list(ranked_genes_df['scores'])]
         cell_type_i = pd.merge(cluster_i,cell_type_df_, how ='inner', on =["official gene symbol"])
         gene2celltype[i] = utils.gene2ct(adata, cell_type_i)
+        
 
         
         # save the file for prototyping ranking function
@@ -104,8 +112,8 @@ def main():
     l=[]
     m=labels
     for i in range(len(adata.obs)):
-        l.append(m[int(adata.obs["leiden_aggr"][i])+1])
-        adata.obs["celltype"]=l
+      l.append(m[int(adata.obs["leiden_aggr"][i])+1])
+    adata.obs["celltype"]=l
 
     sc.pl.umap(
         adata, 

@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import pandas as pd
 import data
-def preprocess(dir_name,n_models):     
+def preprocess(dir_name="./input/",n_models=2):     
     #PREPROCESSING
     adata=data.get_data(dir_name)
     sc.pl.highest_expr_genes(adata, n_top=20, )

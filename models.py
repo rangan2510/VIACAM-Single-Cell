@@ -4,7 +4,7 @@ import scanpy as sc
 import torch
 import numpy as np
 import pandas as pd
-def train(adata, n_models=2,train_iters=1):
+def train(adata, n_models=2,train_iters=20):
     latents = []
     for i in range(1,n_models+1):
         layer_name = "counts_" + str(i)

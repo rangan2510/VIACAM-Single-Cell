@@ -9,17 +9,15 @@ output_directory ="data/pbmc3k_filtered_gene_bc_matrices.tar.gz"
 filename = wget.download(url, out=output_directory)
 #!cd data; tar -xzf pbmc3k_filtered_gene_bc_matrices.tar.gz
 '''
-def get_data(dir_name='E3-E3',verbosity=3):
-    os.mkdir("data")
-    os.chdir("data")
+def get_data(dir_name='./input/',verbosity=3):
+    #os.mkdir("data")
+    #os.chdir("data")
     os.mkdir("write")
     torch.random.manual_seed(42)
     sc.settings.verbosity = verbosity             # verbosity: errors (0), warnings (1), info (2), hints (3)
     sc.logging.print_header()
     sc.settings.set_figure_params(dpi=120, facecolor='white', dpi_save=300, vector_friendly=True)
     sc._settings.ScanpyConfig(autosave=True)
-
-    results_file = 'write/dat.h5ad'
 
     adata = sc.read_10x_mtx(
         dir_name,  # the directory with the `.mtx` file
