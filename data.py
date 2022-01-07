@@ -2,13 +2,8 @@ import os
 import torch
 import numpy as np
 import pandas as pd
-'''import wget
-def get_data()
-url = "http://cf.10xgenomics.com/samples/cell-exp/1.1.0/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz"
-output_directory ="data/pbmc3k_filtered_gene_bc_matrices.tar.gz"
-filename = wget.download(url, out=output_directory)
-#!cd data; tar -xzf pbmc3k_filtered_gene_bc_matrices.tar.gz
-'''
+import scanpy as sc
+
 def get_data(dir_name='./input/',verbosity=3):
     #os.mkdir("data")
     #os.chdir("data")
